@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FwdHackathon", "FwdHackathon\FwdHackathon.csproj", "{9F43A6B6-BD18-4ECD-B3D4-E74B1F76B2EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F43A6B6-BD18-4ECD-B3D4-E74B1F76B2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F43A6B6-BD18-4ECD-B3D4-E74B1F76B2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F43A6B6-BD18-4ECD-B3D4-E74B1F76B2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F43A6B6-BD18-4ECD-B3D4-E74B1F76B2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {137F5BF3-8944-442A-A5A0-AE8CA57C2719}
+	EndGlobalSection
+EndGlobal
