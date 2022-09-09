@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FwdHackathon.Areas.Identity.Data;
+using Refit;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -32,6 +34,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDbContext>();
+
+// Add REST api service (Refit)
+string apiServer = "https://localhost:44320/api";
+
+builder.Services
+  .AddRefitClient<ITwitterData>()
+  .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiServer));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
