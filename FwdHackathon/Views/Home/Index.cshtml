@@ -4,46 +4,47 @@
 }
 
 <div class="text-center">
-    
 </div>
 
 <div class="row">
-  <div class="col-4">
-      <h1 class="display-4">Find out what's trending!</h1>
-      @foreach(Trend t in Model){
-          <a  href="#">@t.name</a><br />
-      }
-        <a id="hashtag" href="#">test</a>
-  </div>
-  <div class="col-8">
+    <div class="col-4">
+        <h1 class="display-4">Find out what's trending!</h1>
+        @foreach (Trend t in Model)
+        {
+            <a class ="hashtag" href="#">@t.name</a>
+
+            <br />
+        }
+    </div>
+    <div class="col-8">
         <div class="card">
             <h5 class="card-header">Featured</h5>
             <div class="card-body">
                 <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                @*<p class="card-text" >With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>*@
             </div>
         </div>
-  </div>
+    </div>
 </div>
 
 @section Scripts{
-   
-<script>
-    
-        $("#hashtag").click(function (event) {
+
+    <script>
+
+        $(".hashtag").click(function (event) {
             var txt = $(event.target).text();
             /* stop form from submitting normally */
             event.preventDefault();
             $.ajax({
                 url: "@Url.Action("getTweets", "Home")",
+                contentType: 'application/json; charset=utf-8',
                 data: { 'hashtag': txt },
                 success: function (data) {
-                    var json = $.parseJSON(data);
-                    console.log("test: "+json.length);
-                    for (var i = 0; i < json.length; i++) {
-                        console.log(json[0][3])
-
+                    $('p.card-text').remove();
+                    for (var i = 0; i < data.length; i++) {
+                        $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
+                        console.log(data[i].fullText)
                     };
                 },
                 error: function (er) {
@@ -52,5 +53,5 @@
             });
         });
 
-</script>
+    </script>
 }

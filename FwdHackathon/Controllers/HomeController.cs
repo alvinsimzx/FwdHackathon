@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 using Tweetinvi;
+using Tweetinvi.Models;
 using Tweetinvi.Models.V2;
 
 namespace FwdHackathon.Controllers
@@ -55,16 +56,17 @@ namespace FwdHackathon.Controllers
 
     public async Task<JsonResult> getTweets(string hashtag)
     {
+        ITweet[] tweetsIterator = await _userClient.Search.SearchTweetsAsync("#"+hashtag);
+            List<ITweet> listTweets = new List<ITweet>(tweetsIterator);
+            List<Tweet> customTweets = new List<Tweet>();
+            foreach(ITweet tweet in listTweets)
+            {
+                Tweet newTweet = new Tweet(tweet.FullText, tweet.CreatedBy.Name);
 
-        var tweets = await _userClient.Execute.RequestAsync(request =>
-        {
-            request.Url = "https://api.twitter.com/1.1/search/tweets.json?q=%23" + hashtag;
-            request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
-        });
-
-        var jsonResponse = tweets.Content;
-           
-        return Json(jsonResponse);
+                customTweets.Add(newTweet);
+            }
+            customTweets = customTweets.Take(5).ToList();
+        return Json(customTweets);
     }
 
     public IActionResult Upload()
