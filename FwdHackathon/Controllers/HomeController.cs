@@ -1,7 +1,10 @@
 ﻿using FwdHackathon.Areas.Identity.Data;
 using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Text.Json.Nodes;
 using Tweetinvi;
 
 namespace FwdHackathon.Controllers
@@ -21,15 +24,31 @@ namespace FwdHackathon.Controllers
     {
       var homeTimelineResult = await _userClient.Execute.RequestAsync(request =>
       {
-        request.Url = "https://api.twitter.com/1.1/trends/place.json?id=1";
+        request.Url = "https://api.twitter.com/1.1/trends/place.json?id=23424901";
         request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
       });
 
       var jsonResponse = homeTimelineResult.Content;
+            var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
+            TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
 
-      return View();
+            int counter = 0;
+            foreach(Trend t in model.trends)
+            {
+                if (counter>4)
+                {
+                    model.trends.Remove(t);
+                }
+                else
+                {
+                    counter += 1;
+                }
+                
+            }
+
+      return View(model);
     }
-
+        
     public IActionResult Privacy()
     {
       return View();
