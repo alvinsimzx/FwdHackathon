@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 using Tweetinvi;
+using Tweetinvi.Models.V2;
 
 namespace FwdHackathon.Controllers
 {
@@ -50,7 +51,22 @@ namespace FwdHackathon.Controllers
       return View(model.trends);
     }
 
-    public IActionResult Upload()
+    public async Task<JsonResult> getTweets(string hashtag)
+    {
+
+        var tweets = await _userClient.Execute.RequestAsync(request =>
+        {
+            request.Url = "https://api.twitter.com/1.1/search/tweets.json?q=%23" + hashtag;
+            request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
+        });
+
+        var jsonResponse = tweets.Content;
+        var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
+           
+        return Json(unQuotedString);
+    }
+
+        public IActionResult Upload()
     {
       return View();
     }

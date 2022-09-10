@@ -11,10 +11,45 @@
   <div class="col-4">
       <h1 class="display-4">Find out what's trending!</h1>
       @foreach(Trend t in Model){
-          <span>@t.name</span><br />
+          <a  href="#">@t.name</a><br />
       }
+        <a id="hashtag" href="#">test</a>
   </div>
   <div class="col-8">
-      
+        <div class="card">
+            <h5 class="card-header">Featured</h5>
+            <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
   </div>
 </div>
+
+@section Scripts{
+   
+<script>
+    
+        $("#hashtag").click(function (event) {
+            var txt = $(event.target).text();
+            /* stop form from submitting normally */
+            event.preventDefault();
+            $.ajax({
+                url: "@Url.Action("getTweets", "Home")",
+                data: { 'hashtag': txt },
+                success: function (data) {
+                    var json = $.parseJSON(data);
+                    for (var i = 0; i < json[0].length; i++) {
+                        console.log(json[0][3])
+
+                    };
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+            });
+        });
+
+</script>
+}
