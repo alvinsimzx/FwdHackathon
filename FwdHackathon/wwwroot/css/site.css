@@ -16,3 +16,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Hides all upload file buttons */
+input[type="file"] {
+  display: none;
+}

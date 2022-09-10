@@ -49,6 +49,16 @@ namespace FwdHackathon.Controllers
 
       return View(model.trends);
     }
+
+    public IActionResult Upload()
+    {
+      return View();
+    }
+
+    public IActionResult Trends()
+    {
+      return View();
+    }
         
     public IActionResult Privacy()
     {
