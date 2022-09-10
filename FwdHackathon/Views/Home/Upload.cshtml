@@ -1,11 +1,9 @@
-﻿
+﻿<h2>Upload</h2>
 
-<h2>Upload</h2>
-
-<form method="post">
+<form action="@Url.Action("Upload", "Home")" method="Post" enctype="multipart/form-data">
   <label for="fileupload" class="btn btn-primary monster-upload">
     Upload .csv file
   </label>
-  <input id="fileupload" type="file" name="images" accept="image/gif, image/jpeg, image/png">
+  <input id="fileupload" type="file" name="files" accept=".csv">
   <button class="btn btn-success" type="submit">Confirm</button>
 </form>
