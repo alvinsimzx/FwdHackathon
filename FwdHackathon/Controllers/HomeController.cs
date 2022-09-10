@@ -33,6 +33,7 @@ namespace FwdHackathon.Controllers
             TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
 
             int counter = 0;
+            model.trends = model.trends.Take(5).ToList();
             foreach(Trend t in model.trends)
             {
                 if (counter>4)
@@ -46,7 +47,7 @@ namespace FwdHackathon.Controllers
                 
             }
 
-      return View(model);
+      return View(model.trends);
     }
         
     public IActionResult Privacy()

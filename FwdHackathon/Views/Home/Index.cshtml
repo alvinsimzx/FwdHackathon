@@ -1,19 +1,20 @@
-﻿@model FwdHackathon.Models.TrendsList
+﻿@model IEnumerable<FwdHackathon.Models.Trend>
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Find out what's trending!</h1>
+    
 </div>
 
 <div class="row">
-  <div class="col-8">
-      @foreach(Trend t in Model.trends){
+  <div class="col-4">
+      <h1 class="display-4">Find out what's trending!</h1>
+      @foreach(Trend t in Model){
           <span>@t.name</span><br />
       }
   </div>
-  <div class="col-4">
-      col-4
+  <div class="col-8">
+      
   </div>
 </div>
