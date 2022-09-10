@@ -56,6 +56,7 @@ namespace FwdHackathon.Controllers
     public async Task<JsonResult> getTweets(string hashtag)
     {
 
+<<<<<<< Updated upstream
       var tweets = await _userClient.Execute.RequestAsync(request =>
       {
         request.Url = "https://api.twitter.com/1.1/search/tweets.json?q=%23" + hashtag;
@@ -66,6 +67,17 @@ namespace FwdHackathon.Controllers
       var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
 
       return Json(unQuotedString);
+=======
+        var tweets = await _userClient.Execute.RequestAsync(request =>
+        {
+            request.Url = "https://api.twitter.com/1.1/search/tweets.json?q=%23" + hashtag;
+            request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
+        });
+
+        var jsonResponse = tweets.Content;
+           
+        return Json(jsonResponse);
+>>>>>>> Stashed changes
     }
 
     public IActionResult Upload()
