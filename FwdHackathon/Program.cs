@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using FwdHackathon.Areas.Identity.Data;
 using Refit;
+using Tweetinvi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,12 +36,29 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDbContext>();
 
-// Add REST api service (Refit)
-string apiServer = "https://localhost:44320/api";
+// Add twitter API info
+TwitterClient userClient;
 
-builder.Services
-  .AddRefitClient<ITwitterData>()
-  .ConfigureHttpClient(c => c.BaseAddress = new Uri(apiServer));
+if (env == "Production")
+{
+  var consumer_key = Environment.GetEnvironmentVariable("consumer_key");
+  var consumer_secret = Environment.GetEnvironmentVariable("consumer_secret");
+  var access_token = Environment.GetEnvironmentVariable("access_token");
+  var access_token_secret = Environment.GetEnvironmentVariable("access_token_secret");
+
+  userClient = new TwitterClient(consumer_key, consumer_secret, access_token, access_token_secret);
+}
+else
+{
+  userClient = new TwitterClient(
+    builder.Configuration.GetValue<string>("TwitterAPI:consumer_key"),
+    builder.Configuration.GetValue<string>("TwitterAPI:consumer_secret"),
+    builder.Configuration.GetValue<string>("TwitterAPI:access_token"),
+    builder.Configuration.GetValue<string>("TwitterAPI:access_token_secret")
+    );
+}
+
+builder.Services.AddSingleton(userClient);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -60,7 +78,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 
 app.UseAuthorization();
 

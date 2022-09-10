@@ -2,23 +2,30 @@
 using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Tweetinvi;
 
 namespace FwdHackathon.Controllers
 {
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;
-    private readonly ITwitterData _twitterData;
+    private readonly TwitterClient _userClient;
 
-    public HomeController(ILogger<HomeController> logger, ITwitterData twitterData)
+    public HomeController(ILogger<HomeController> logger, TwitterClient userClient)
     {
       _logger = logger;
-      _twitterData = twitterData;
+      _userClient = userClient;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      var testing = _twitterData.GetTweets(1);
+      var homeTimelineResult = await _userClient.Execute.RequestAsync(request =>
+      {
+        request.Url = "https://api.twitter.com/1.1/trends/place.json?id=1";
+        request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
+      });
+
+      var jsonResponse = homeTimelineResult.Content;
 
       return View();
     }
