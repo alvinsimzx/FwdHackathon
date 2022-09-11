@@ -75,7 +75,7 @@ const readURL = input => {
     loading(loadingCheck);
 
     // List of categories + counter
-    let categoryList = [];
+    let categoryList = new Object();
 
     // Initialize JS file reader
     let reader = new FileReader();
@@ -91,7 +91,7 @@ const readURL = input => {
           let key = row.category;
 
           // If number doesn't exist, assign 1
-          typeof categoryList[key] == "number"
+          categoryList.hasOwnProperty(key)
             ? categoryList[key] += 1
             : categoryList[key] = 1;
         })
@@ -100,9 +100,19 @@ const readURL = input => {
       // Stop loading
       loadingCheck.isRunning = false;
 
-      // Display graph of categories
+      // Restructure category list 
       console.log(categoryList);
-      //render(categoryList)
+      console.log(Object.keys(categoryList));
+      console.log(Object.values(categoryList));
+
+      let refitList = [];
+
+      for (const [key, value] of Object.entries(categoryList)) {
+        refitList.push(`${key}: ${value}`)
+      }
+
+      // Render svg graph
+      //render(refitList);
 
       // Write aggregated data to db
 
