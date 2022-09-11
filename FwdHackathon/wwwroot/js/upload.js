@@ -5,9 +5,11 @@ const width = +svg.attr('width');
 const height = +svg.attr('height');
 
 const render = data => {
+  console.log(data);
+
   // value accesors
-  const xValue = d => d.population;
-  const yValue = d => d.country;
+  const xValue = d => d.value;
+  const yValue = d => d.category;
 
   // margin convention
   const margin = { top: 20, right: 20, bottom: 20, left: 80 };
@@ -77,6 +79,9 @@ const readURL = input => {
     // List of categories + counter
     let categoryMap = new Map();
 
+    // Refit map for graph
+    let refitList = [];
+
     // Initialize JS file reader
     let reader = new FileReader();
 
@@ -95,27 +100,21 @@ const readURL = input => {
             ? categoryMap.set(index, categoryMap.get(index) + 1)
             : categoryMap.set(index, 1);
         })
+
+        // Add data to refitList for graph rendering
+        for (const [key, value] of categoryMap.entries()) {
+          refitList.push({ "category": key, "value": value })
+        }
+
+        // Stop loading
+        loadingCheck.isRunning = false;
+
+        // Render svg graph
+        render(refitList);
+
+        // Write aggregated data to db
       });
-
-      // Stop loading
-      loadingCheck.isRunning = false;
-
-      // Restructure category list 
-      console.log(categoryMap);
-
-      let refitList = [];
-
-      //for (const [key, value] of Object.entries(categoryList)) {
-      //  refitList.push(`${key}: ${value}`)
-      //}
-
-      // Render svg graph
-      //render(refitList);
-
-      // Write aggregated data to db
-
     }
-
     // Load the input file
     reader.readAsDataURL(input.files[0]);
   }

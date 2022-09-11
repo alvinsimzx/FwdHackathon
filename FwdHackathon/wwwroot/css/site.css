@@ -30,8 +30,6 @@ input[type="file"] {
 
 .upload-svg {
   position: absolute;
-  background-color: aquamarine;
-  opacity: 0.2;
 }
 
 .upload-csv {
