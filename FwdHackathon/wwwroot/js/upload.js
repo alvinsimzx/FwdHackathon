@@ -75,7 +75,7 @@ const readURL = input => {
     loading(loadingCheck);
 
     // List of categories + counter
-    let categoryList = new Object();
+    let categoryMap = new Map();
 
     // Initialize JS file reader
     let reader = new FileReader();
@@ -88,12 +88,12 @@ const readURL = input => {
 
         // Compute the number of categories for each row
         data.forEach((row) => {
-          let key = row.category;
+          let index = row.category;
 
           // If number doesn't exist, assign 1
-          categoryList.hasOwnProperty(key)
-            ? categoryList[key] += 1
-            : categoryList[key] = 1;
+          categoryMap.has(index)
+            ? categoryMap.set(index, categoryMap.get(index) + 1)
+            : categoryMap.set(index, 1);
         })
       });
 
@@ -101,15 +101,13 @@ const readURL = input => {
       loadingCheck.isRunning = false;
 
       // Restructure category list 
-      console.log(categoryList);
-      console.log(Object.keys(categoryList));
-      console.log(Object.values(categoryList));
+      console.log(categoryMap);
 
       let refitList = [];
 
-      for (const [key, value] of Object.entries(categoryList)) {
-        refitList.push(`${key}: ${value}`)
-      }
+      //for (const [key, value] of Object.entries(categoryList)) {
+      //  refitList.push(`${key}: ${value}`)
+      //}
 
       // Render svg graph
       //render(refitList);

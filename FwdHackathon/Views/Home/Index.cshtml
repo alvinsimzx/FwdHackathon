@@ -8,12 +8,13 @@
 
 <div class="row">
   <div class="col-4">
-    <h2>Trending topics</h3>
-    @foreach (Trend t in Model)
-    {
-      <a class="hashtag" href="#">@t.name</a>
-      <br />
-    }
+    <h2>
+      Trending topics</h3>
+      @foreach (Trend t in Model)
+      {
+        <a class="hashtag" href="#">@t.name</a>
+        <br />
+      }
   </div>
   <div class="col-8">
     <div class="card">
