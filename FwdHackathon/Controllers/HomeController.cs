@@ -86,6 +86,9 @@ namespace FwdHackathon.Controllers
       Dictionary<string, double> users = await usersClient.GetMatches(word);
       users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
+      var categoryList = _appDbContext.TransData
+        .Where(i => i.Label == users.ElementAt(0).Key)
+        .Select(i => i.Value);
 
       return Json();
     }
