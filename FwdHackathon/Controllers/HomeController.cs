@@ -5,9 +5,11 @@ using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Refit;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 using Tweetinvi;
+using Tweetinvi.Client;
 using Tweetinvi.Models;
 using Tweetinvi.Models.V2;
 
@@ -32,24 +34,27 @@ namespace FwdHackathon.Controllers
         request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
       });
 
+      var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
       var jsonResponse = homeTimelineResult.Content;
       var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
       TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
 
       int counter = 0;
       model.trends = model.trends.Take(5).ToList();
+      List<double> listOfMatch = new List<double>();
+      List<string> listOfCategories = new List<string>();
+
       foreach (Trend t in model.trends)
       {
-        if (counter > 4)
-        {
-          model.trends.Remove(t);
-        }
-        else
-        {
-          counter += 1;
-        }
+        Dictionary<string, double> users = await usersClient.GetMatches(t.name);
+        users =  users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        listOfMatch.Add(users.ElementAt(0).Value*100);
+        listOfCategories.Add(users.ElementAt(0).Key);
 
       }
+            
+      ViewBag.listOfMatch = listOfMatch;
+      ViewBag.listOfCategories = listOfCategories;
 
       return View(model.trends);
     }
@@ -62,9 +67,10 @@ namespace FwdHackathon.Controllers
             foreach(ITweet tweet in listTweets)
             {
                 Tweet newTweet = new Tweet(tweet.FullText, tweet.CreatedBy.Name);
-
                 customTweets.Add(newTweet);
             }
+            
+
             customTweets = customTweets.Take(5).ToList();
         return Json(customTweets);
     }

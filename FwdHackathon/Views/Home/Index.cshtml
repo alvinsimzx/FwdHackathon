@@ -8,13 +8,17 @@
 
 <div class="row">
   <div class="col-4">
-    <h2>
-      Trending topics</h3>
-      @foreach (Trend t in Model)
-      {
-        <a class="hashtag" href="#">@t.name</a>
-        <br />
-      }
+        <h3 class="display-4">Find out what's trending!</h3>
+        @{
+            int counter = 0;
+        }
+        @foreach (Trend t in Model)
+        {
+            <a class="hashtag" href="#">@t.name</a>
+            <span>@ViewBag.listOfMatch[counter] % - @ViewBag.listOfCategories[counter]</span>
+            <br />
+            counter++;
+        }
   </div>
   <div class="col-8">
     <div class="card">
