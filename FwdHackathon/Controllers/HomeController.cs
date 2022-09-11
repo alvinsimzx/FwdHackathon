@@ -82,9 +82,9 @@ namespace FwdHackathon.Controllers
     }
     public async Task<JsonResult> getMatches(string word)
     {
-        var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
-        Dictionary<string, double> users = await usersClient.GetMatches(word);
-        users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+      var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+      Dictionary<string, double> users = await usersClient.GetMatches(word);
+      users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
 
       return Json();

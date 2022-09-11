@@ -34,12 +34,12 @@
 
 @section Scripts{
   <script>
-    $(".hashtag").click(function (event) {
+    $(".hashtag").click(function async (event) {
         var txt = $(event.target).text();
         /* stop form from submitting normally */
         event.preventDefault();
 
-        $.ajax({
+        await $.ajax({
             url: "@Url.Action("getTweets", "Home")",
             contentType: 'application/json; charset=utf-8',
             data: { 'hashtag': txt },
@@ -56,7 +56,7 @@
         });
 
         $.ajax({
-            url: "@Url.Action("getTweets", "Home")",
+            url: "@Url.Action("getMatches", "Home")",
             contentType: 'application/json; charset=utf-8',
             data: { 'hashtag': txt },
             success: function (data) {
