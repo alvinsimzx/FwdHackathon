@@ -18,9 +18,9 @@ body {
 }
 
 /* Hides all upload file buttons */
-/*input[type="file"] {
+input[type="file"] {
   display: none;
-}*/
+}
 
 .upload-title {
   display: flex;
@@ -35,7 +35,6 @@ body {
   align-items: center;
   justify-content: center;
   background-color: orange;
-  overflow-y: scroll;
   margin-top: 5px;
 }
 

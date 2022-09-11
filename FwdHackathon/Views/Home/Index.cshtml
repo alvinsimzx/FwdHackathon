@@ -1,57 +1,53 @@
 ﻿@model IEnumerable<FwdHackathon.Models.Trend>
 @{
-    ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
 </div>
 
 <div class="row">
-    <div class="col-4">
-        <h1 class="display-4">Find out what's trending!</h1>
-        @foreach (Trend t in Model)
-        {
-            <a class ="hashtag" href="#">@t.name</a>
-
-            <br />
-        }
+  <div class="col-4">
+    <h3 class="display-4">Find out what's trending!</h3>
+    @foreach (Trend t in Model)
+    {
+      <a class="hashtag" href="#">@t.name</a>
+      <br />
+    }
+  </div>
+  <div class="col-8">
+    <div class="card">
+      <h5 class="card-header">Featured</h5>
+      <div class="card-body">
+        <h5 class="card-title">Special title treatment</h5>
+        @*<p class="card-text" >With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>*@
+      </div>
     </div>
-    <div class="col-8">
-        <div class="card">
-            <h5 class="card-header">Featured</h5>
-            <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                @*<p class="card-text" >With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>*@
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 @section Scripts{
-
-    <script>
-
-        $(".hashtag").click(function (event) {
-            var txt = $(event.target).text();
-            /* stop form from submitting normally */
-            event.preventDefault();
-            $.ajax({
-                url: "@Url.Action("getTweets", "Home")",
-                contentType: 'application/json; charset=utf-8',
-                data: { 'hashtag': txt },
-                success: function (data) {
-                    $('p.card-text').remove();
-                    for (var i = 0; i < data.length; i++) {
-                        $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
-                        console.log(data[i].fullText)
-                    };
-                },
-                error: function (er) {
-                    console.log(er);
-                }
-            });
+  <script>
+    $(".hashtag").click(function (event) {
+        var txt = $(event.target).text();
+        /* stop form from submitting normally */
+        event.preventDefault();
+        $.ajax({
+            url: "@Url.Action("getTweets", "Home")",
+            contentType: 'application/json; charset=utf-8',
+            data: { 'hashtag': txt },
+            success: function (data) {
+                $('p.card-text').remove();
+                for (var i = 0; i < data.length; i++) {
+                    $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
+                    console.log(data[i].fullText)
+                };
+            },
+            error: function (er) {
+                console.log(er);
+            }
         });
-
-    </script>
+    });
+  </script>
 }
