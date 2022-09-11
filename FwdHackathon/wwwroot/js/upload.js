@@ -5,14 +5,12 @@ const width = +svg.attr('width');
 const height = +svg.attr('height');
 
 const render = data => {
-  console.log(data);
-
   // value accesors
   const xValue = d => d.value;
   const yValue = d => d.category;
 
   // margin convention
-  const margin = { top: 20, right: 20, bottom: 20, left: 80 };
+  const margin = { top: 20, right: 20, bottom: 20, left: 120 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -62,6 +60,8 @@ const loading = async (loadingCheck) => {
   }
 
   $('.upload-text').text('Computed!');
+  await timeout(250);
+  $('.upload-text').attr('');
 }
 
 // Grabs file from file upload input, populates it into csv component
@@ -99,6 +99,11 @@ const readURL = input => {
           categoryMap.has(index)
             ? categoryMap.set(index, categoryMap.get(index) + 1)
             : categoryMap.set(index, 1);
+
+          // Remove N/A
+          categoryMap.has('N/A')
+            ? categoryMap.delete('N/A')
+            : console.log('No N/A');
         })
 
         // Add data to refitList for graph rendering
