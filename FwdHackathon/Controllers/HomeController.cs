@@ -4,6 +4,7 @@ using FwdHackathon.Areas.Identity.Data;
 using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.MSIdentity.Shared;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Refit;
@@ -21,11 +22,13 @@ namespace FwdHackathon.Controllers
   {
     private readonly ILogger<HomeController> _logger;
     private readonly TwitterClient _userClient;
+    private readonly AppDbContext _appDbContext;
 
-    public HomeController(ILogger<HomeController> logger, TwitterClient userClient)
+    public HomeController(ILogger<HomeController> logger, TwitterClient userClient, AppDbContext appDbContext)
     {
       _logger = logger;
       _userClient = userClient;
+      _appDbContext = appDbContext;
     }
 
     public async Task<IActionResult> Index()
@@ -36,7 +39,6 @@ namespace FwdHackathon.Controllers
         request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
       });
 
-      
       var jsonResponse = homeTimelineResult.Content;
       var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
       TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
@@ -45,7 +47,9 @@ namespace FwdHackathon.Controllers
       model.trends = model.trends.Take(5).ToList();
       List<double> listOfMatch = new List<double>();
       List<string> listOfCategories = new List<string>();
-        var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+
+      var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+
       foreach (Trend t in model.trends)
       {
         Dictionary<string, double> users = await usersClient.GetMatches(t.name);
@@ -96,6 +100,15 @@ namespace FwdHackathon.Controllers
     public async Task<IActionResult> Upload(string jsonResponse)
     {
       Category model = JsonConvert.DeserializeObject<Category>(jsonResponse);
+
+      var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+
+      Dictionary<string, double> users = await usersClient.GetMatches(model.key);
+      users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+
+      _appDbContext.Add(new TransData(model.key, model.value, users.ElementAt(0).Key));
+      await _appDbContext.SaveChangesAsync();
 
       return Ok();
     }
