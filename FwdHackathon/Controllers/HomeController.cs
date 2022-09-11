@@ -3,10 +3,12 @@ using Firebase.Storage;
 using FwdHackathon.Areas.Identity.Data;
 using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.MSIdentity.Shared;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Refit;
 using System.Diagnostics;
+using System.Security.Principal;
 using System.Text.Json.Nodes;
 using Tweetinvi;
 using Tweetinvi.Client;
@@ -82,9 +84,9 @@ namespace FwdHackathon.Controllers
 
     [HttpPost]
     [DisableRequestSizeLimit]
-    public async Task<IActionResult> Upload(string categoryDict)
+    public async Task<IActionResult> Upload(string jsonResponse)
     {
-      var test = categoryDict;
+      Category model = JsonConvert.DeserializeObject<Category>(jsonResponse);
 
       return Ok();
     }

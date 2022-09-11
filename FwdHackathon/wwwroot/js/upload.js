@@ -7,7 +7,7 @@ const height = +svg.attr('height');
 const render = data => {
   // value accesors
   const xValue = d => d.value;
-  const yValue = d => d.category;
+  const yValue = d => d.key;
 
   // margin convention
   const margin = { top: 20, right: 20, bottom: 20, left: 120 };
@@ -106,7 +106,7 @@ const readURL = input => {
 
         // Add data to refitList for graph rendering
         for (const [key, value] of categoryMap.entries()) {
-          refitList.push({ "category": key, "value": value })
+          refitList.push({ "key": key, "value": value })
         }
 
         // Stop loading
@@ -115,22 +115,19 @@ const readURL = input => {
         // Render svg graph
         render(refitList);
 
-        // Serialize map
-        let mapSerialzied = JSON.stringify(Array.from(categoryMap.entries()))
-
-        console.log(mapSerialzied);
-
         // Write aggregated data to db
-        $.ajax({
-          type: 'POST',
-          url: '/Home/Upload',
-          data: { categoryDict: mapSerialzied },
-          success: function () {
-            alert("Data uploaded!");
-          },
-          error: function () {
-            console.log('Failed ');
-          }
+        refitList.forEach((item) => {
+          $.ajax({
+            type: 'POST',
+            url: '/Home/Upload',
+            data: { jsonResponse: JSON.stringify(item) },
+            success: function () {
+              alert("Data uploaded!");
+            },
+            error: function () {
+              console.log('Failed ');
+            }
+          })
         })
       });
     }
