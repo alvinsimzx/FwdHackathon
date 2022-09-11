@@ -129,6 +129,9 @@ const readURL = input => {
             }
           })
         })
+
+        // Show the confirm button
+        $('#confirm').attr('hidden', true);
       });
     }
     // Load the input file
