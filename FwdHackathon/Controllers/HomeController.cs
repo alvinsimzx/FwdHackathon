@@ -36,7 +36,7 @@ namespace FwdHackathon.Controllers
         request.HttpMethod = Tweetinvi.Models.HttpMethod.GET;
       });
 
-      var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+      
       var jsonResponse = homeTimelineResult.Content;
       var unQuotedString = jsonResponse.TrimStart('[').TrimEnd(']');
       TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
@@ -45,7 +45,7 @@ namespace FwdHackathon.Controllers
       model.trends = model.trends.Take(5).ToList();
       List<double> listOfMatch = new List<double>();
       List<string> listOfCategories = new List<string>();
-
+        var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
       foreach (Trend t in model.trends)
       {
         Dictionary<string, double> users = await usersClient.GetMatches(t.name);
@@ -75,6 +75,15 @@ namespace FwdHackathon.Controllers
 
       customTweets = customTweets.Take(5).ToList();
       return Json(customTweets);
+    }
+    public async Task<JsonResult> getMatches(string word)
+    {
+        var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
+        Dictionary<string, double> users = await usersClient.GetMatches(word);
+        users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+
+      return Json();
     }
 
     public IActionResult Upload()
