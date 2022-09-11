@@ -3,6 +3,7 @@ using Firebase.Storage;
 using FwdHackathon.Areas.Identity.Data;
 using FwdHackathon.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Language.Extensions;
 using Microsoft.DotNet.MSIdentity.Shared;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -80,17 +81,22 @@ namespace FwdHackathon.Controllers
       customTweets = customTweets.Take(5).ToList();
       return Json(customTweets);
     }
-    public async Task<JsonResult> getMatches(string word)
+    public async Task<string> getMatches(string word)
     {
       var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
       Dictionary<string, double> users = await usersClient.GetMatches(word);
       users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-      var categoryList = _appDbContext.TransData
+      int categoryList = _appDbContext.TransData
         .Where(i => i.Label == users.ElementAt(0).Key)
-        .Select(i => i.Value);
+        .Select(i => i.Value)
+        .First();
 
-      return Json();
+      int totalUsers = _appDbContext.TransData.Sum(x => x.Value);
+      decimal percentage = Math.Round((decimal) categoryList / totalUsers,6);
+
+
+      return percentage.ToString();
     }
 
     public IActionResult Upload()

@@ -24,7 +24,7 @@
     <div class="card">
       <h5 class="card-header">Featured</h5>
       <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
+        <h5 class="card-title">Click on the links to find out about each trend!</h5>
         @*<p class="card-text" >With supporting text below as a natural lead-in to additional content.</p>
         <a href="#" class="btn btn-primary">Go somewhere</a>*@
       </div>
@@ -39,37 +39,38 @@
         /* stop form from submitting normally */
         event.preventDefault();
 
-        await $.ajax({
-            url: "@Url.Action("getTweets", "Home")",
-            contentType: 'application/json; charset=utf-8',
-            data: { 'hashtag': txt },
+        $.ajax({
+            url: "@Url.Action("getMatches", "Home")",
+            data: { 'word': txt },
             success: function (data) {
+                $('h5.card-title').remove();
                 $('p.card-text').remove();
-                for (var i = 0; i < data.length; i++) {
-                    $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
-                    console.log(data[i].fullText)
-                };
+                $('.card-body').append("<h5 class='card-title''><strong>"+data+"% of your customers would relate to this hashtag</strong></h5>");
+
+                    $.ajax({
+                        url: "@Url.Action("getTweets", "Home")",
+                        contentType: 'application/json; charset=utf-8',
+                        data: { 'hashtag': txt },
+                        success: function (data) {
+                            
+                            for (var i = 0; i < data.length; i++) {
+                                $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
+                                console.log(data[i].fullText)
+                            };
+                        },
+                        error: function (er) {
+                            console.log(er);
+                        }
+                    });
             },
             error: function (er) {
                 console.log(er);
             }
         });
 
-        $.ajax({
-            url: "@Url.Action("getMatches", "Home")",
-            contentType: 'application/json; charset=utf-8',
-            data: { 'hashtag': txt },
-            success: function (data) {
-                $('p.card-text').remove();
-                for (var i = 0; i < data.length; i++) {
-                    $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
-                    console.log(data[i].fullText)
-                };
-            },
-            error: function (er) {
-                console.log(er);
-            }
-        });
+        
+
+        
     });
   </script>
 }
