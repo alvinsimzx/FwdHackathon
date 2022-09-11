@@ -29,8 +29,6 @@ const render = data => {
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-  // const yAxis = d3.axisLeft(yScale);
-  // yAxis(g.append('g'));
   g.append('g').call(d3.axisLeft(yScale));
   g.append('g').call(d3.axisBottom(xScale))
     .attr('transform', `translate(0, ${innerHeight})`);
@@ -118,6 +116,7 @@ const readURL = input => {
         render(refitList);
 
         // Write aggregated data to db
+        
       });
     }
     // Load the input file
