@@ -122,7 +122,7 @@ const readURL = input => {
             url: '/Home/Upload',
             data: { jsonResponse: JSON.stringify(item) },
             success: function () {
-              alert("Data uploaded!");
+              console.log("Data uploaded!");
             },
             error: function () {
               console.log('Failed ');
