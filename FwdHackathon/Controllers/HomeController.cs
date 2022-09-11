@@ -47,12 +47,12 @@ namespace FwdHackathon.Controllers
       foreach (Trend t in model.trends)
       {
         Dictionary<string, double> users = await usersClient.GetMatches(t.name);
-        users =  users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-        listOfMatch.Add(users.ElementAt(0).Value*100);
+        users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+        listOfMatch.Add(users.ElementAt(0).Value * 100);
         listOfCategories.Add(users.ElementAt(0).Key);
 
       }
-            
+
       ViewBag.listOfMatch = listOfMatch;
       ViewBag.listOfCategories = listOfCategories;
 
@@ -61,18 +61,18 @@ namespace FwdHackathon.Controllers
 
     public async Task<JsonResult> getTweets(string hashtag)
     {
-        ITweet[] tweetsIterator = await _userClient.Search.SearchTweetsAsync("#"+hashtag);
-            List<ITweet> listTweets = new List<ITweet>(tweetsIterator);
-            List<Tweet> customTweets = new List<Tweet>();
-            foreach(ITweet tweet in listTweets)
-            {
-                Tweet newTweet = new Tweet(tweet.FullText, tweet.CreatedBy.Name);
-                customTweets.Add(newTweet);
-            }
-            
+      ITweet[] tweetsIterator = await _userClient.Search.SearchTweetsAsync("#" + hashtag);
+      List<ITweet> listTweets = new List<ITweet>(tweetsIterator);
+      List<Tweet> customTweets = new List<Tweet>();
+      foreach (ITweet tweet in listTweets)
+      {
+        Tweet newTweet = new Tweet(tweet.FullText, tweet.CreatedBy.Name);
+        customTweets.Add(newTweet);
+      }
 
-            customTweets = customTweets.Take(5).ToList();
-        return Json(customTweets);
+
+      customTweets = customTweets.Take(5).ToList();
+      return Json(customTweets);
     }
 
     public IActionResult Upload()
@@ -82,41 +82,11 @@ namespace FwdHackathon.Controllers
 
     [HttpPost]
     [DisableRequestSizeLimit]
-    public async Task<IActionResult> Upload(IFormFile files)
+    public async Task<IActionResult> Upload(string categoryDict)
     {
-      //authentication
-      var auth = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyDWm3HA3AqJQ3OTRlY3H6L_mxWhLmgKILU"));
-      var a = await auth.SignInWithEmailAndPasswordAsync("anthonyleehj@gmail.com", "abcd1234");
+      var test = categoryDict;
 
-      // Constructr FirebaseStorage, path to where you want to upload the file and Put it there
-      var task = new FirebaseStorage(
-          "fwd-hack-2022.appspot.com",
-           new FirebaseStorageOptions
-           {
-             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-             ThrowOnCancel = true,
-           })
-          .Child("data")
-          .Child("random")
-          .Child("file.csv")
-          .PutAsync(files.OpenReadStream());
-
-      // Track progress of the upload
-      task.Progress.ProgressChanged += (s, e) => Console.WriteLine($"Progress: {e.Percentage} %");
-
-      // await the task to wait until upload completes and get the download url
-      var downloadUrl = await task;
-
-      // load the csv file into memory
-      var data = files.OpenReadStream();
-
-      // create a dictionary of category : count
-      Dictionary<string, string> categories = new Dictionary<string, string>(); 
-
-      // pass the dictionary of category : count to the trends page
-
-      // redirect to trends page
-      return RedirectToAction(nameof(Index));
+      return Ok();
     }
 
     public IActionResult Trends()

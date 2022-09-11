@@ -62,14 +62,14 @@ const loading = async (loadingCheck) => {
   $('.upload-text').attr('');
 }
 
+// Variable for checking loading script
+let loadingCheck = { "isRunning": true }
+
 // Grabs file from file upload input, populates it into csv component
 const readURL = input => {
 
   // Check if any files were selected
   if (input.files && input.files[0]) {
-
-    // Variable for checking loading script
-    let loadingCheck = { "isRunning": true }
 
     // Start async loading function
     loading(loadingCheck);
@@ -97,12 +97,12 @@ const readURL = input => {
           categoryMap.has(index)
             ? categoryMap.set(index, categoryMap.get(index) + 1)
             : categoryMap.set(index, 1);
-
-          // Remove N/A
-          categoryMap.has('N/A')
-            ? categoryMap.delete('N/A')
-            : console.log('No N/A');
         })
+
+        // Remove N/A
+        categoryMap.has('N/A')
+          ? categoryMap.delete('N/A')
+          : console.log('No N/A');
 
         // Add data to refitList for graph rendering
         for (const [key, value] of categoryMap.entries()) {
@@ -115,8 +115,23 @@ const readURL = input => {
         // Render svg graph
         render(refitList);
 
+        // Serialize map
+        let mapSerialzied = JSON.stringify(Array.from(categoryMap.entries()))
+
+        console.log(mapSerialzied);
+
         // Write aggregated data to db
-        
+        $.ajax({
+          type: 'POST',
+          url: '/Home/Upload',
+          data: { categoryDict: mapSerialzied },
+          success: function () {
+            alert("Data uploaded!");
+          },
+          error: function () {
+            console.log('Failed ');
+          }
+        })
       });
     }
     // Load the input file
