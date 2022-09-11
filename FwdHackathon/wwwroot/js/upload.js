@@ -1,4 +1,46 @@
-﻿const dataContainer = d3.select('.upload-csv')
+﻿// Rendering graph
+const svg = d3.select('svg');
+
+const width = +svg.attr('width');
+const height = +svg.attr('height');
+
+const render = data => {
+  // value accesors
+  const xValue = d => d.population;
+  const yValue = d => d.country;
+
+  // margin convention
+  const margin = { top: 20, right: 20, bottom: 20, left: 80 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  // domain accepts min and d3.max values of dataset
+  // range accepts min and d3.max values of screen size
+  const xScale = d3.scaleLinear()
+    .domain([0, d3.max(data, xValue)])
+    .range([0, innerWidth]);
+
+  const yScale = d3.scaleBand()
+    .domain(data.map(yValue))
+    .range([0, innerHeight])
+    .padding(0.1);
+
+  // groups everything 
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
+  // const yAxis = d3.axisLeft(yScale);
+  // yAxis(g.append('g'));
+  g.append('g').call(d3.axisLeft(yScale));
+  g.append('g').call(d3.axisBottom(xScale))
+    .attr('transform', `translate(0, ${innerHeight})`);
+
+  g.selectAll('rect').data(data)
+    .enter().append('rect')
+    .attr('y', d => yScale(yValue(d)))
+    .attr('width', d => xScale(xValue(d)))
+    .attr('height', yScale.bandwidth())
+};
 
 // Creates a delay
 const timeout = ms => {
@@ -27,7 +69,7 @@ const readURL = input => {
   if (input.files && input.files[0]) {
 
     // Variable for checking loading script
-    let loadingCheck = { "isRunning" : true}
+    let loadingCheck = { "isRunning": true }
 
     // Start async loading function
     loading(loadingCheck);
@@ -43,6 +85,8 @@ const readURL = input => {
 
       // Load the data using D3
       d3.csv(e.target.result).then(data => {
+
+        // Compute the number of categories for each row
         data.forEach((row) => {
           let key = row.category;
 
@@ -57,10 +101,11 @@ const readURL = input => {
       loadingCheck.isRunning = false;
 
       // Display graph of categories
-
+      console.log(categoryList);
+      //render(categoryList)
 
       // Write aggregated data to db
-      console.log(categoryList);
+
     }
 
     // Load the input file
