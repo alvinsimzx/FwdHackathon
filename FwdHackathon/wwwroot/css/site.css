@@ -1,5 +1,8 @@
 html {
   font-size: 14px;
+  --primaryColor: #FFAC1C;
+  --secondaryColor: #FFC869;
+  --tertiaryColor: #3B2806;
 }
 
 @media (min-width: 768px) {
@@ -40,9 +43,30 @@ input[type="file"] {
   justify-content: center;
   margin-top: 5px;
   border-radius: 8px;
-  background-color: orange;
+  background-color: var(--primaryColor) !important;
 }
 
 .upload-text {
   color: white;
 }
+
+.navigation {
+  background-color: var(--primaryColor) !important;
+}
+
+.logo {
+  font-weight: bold;
+  color: white;
+}
+
+.fo {
+  background-color: gray;
+}
+
+.fo-text {
+  color: white;
+}
+
+  .fo-text a {
+    text-decoration: none;
+  }

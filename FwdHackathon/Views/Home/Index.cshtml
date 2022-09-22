@@ -14,9 +14,9 @@
     }
     @foreach (Trend t in Model)
     {
-        <a class="hashtag" href="#">@t.name</a>
-        <span>@ViewBag.listOfMatch[counter] % - @ViewBag.listOfCategories[counter]</span>
-        <br />
+      <a class="hashtag" href="#">@t.name</a>
+      <span>@ViewBag.listOfCategories[counter]</span>
+      <br />
       counter++;
     }
   </div>
@@ -33,41 +33,41 @@
 </div>
 
 @section Scripts{
-    <script>
-      $(".hashtag").click(function async (event) {
-          var txt = $(event.target).text();
-          /* stop form from submitting normally */
-          event.preventDefault();
+  <script>
+    $(".hashtag").click(function async(event) {
+        var txt = $(event.target).text();
+        /* stop form from submitting normally */
+        event.preventDefault();
 
-          $.ajax({
-              url: "@Url.Action("getMatches", "Home")",
-              data: { 'word': txt },
-              success: function (data) {
-                  $('h5.card-title').remove();
-                  $('p.card-text').remove();
-                  $('.card-body').append("<h5 class='card-title''><strong>"+data+"% of your customers would relate to this hashtag</strong></h5>");
+        $.ajax({
+            url: "@Url.Action("getMatches", "Home")",
+            data: { 'word': txt },
+            success: function (data) {
+                $('h5.card-title').remove();
+                $('p.card-text').remove();
+                $('.card-body').append("<h5 class='card-title''><strong>" + data + "% of your customers would relate to this hashtag</strong></h5>");
 
-                      $.ajax({
-                          url: "@Url.Action("getTweets", "Home")",
-                          contentType: 'application/json; charset=utf-8',
-                          data: { 'hashtag': txt },
-                          success: function (data) {
+                $.ajax({
+                    url: "@Url.Action("getTweets", "Home")",
+                    contentType: 'application/json; charset=utf-8',
+                    data: { 'hashtag': txt },
+                    success: function (data) {
 
-                              for (var i = 0; i < data.length; i++) {
-                                  $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
-                                  console.log(data[i].fullText)
-                              };
-                          },
-                          error: function (er) {
-                              console.log(er);
-                          }
-                      });
-              },
-              error: function (er) {
-                  console.log(er);
-              }
-          });
+                        for (var i = 0; i < data.length; i++) {
+                            $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
+                            console.log(data[i].fullText)
+                        };
+                    },
+                    error: function (er) {
+                        console.log(er);
+                    }
+                });
+            },
+            error: function (er) {
+                console.log(er);
+            }
+        });
 
-      });
-    </script>
+    });
+  </script>
 }

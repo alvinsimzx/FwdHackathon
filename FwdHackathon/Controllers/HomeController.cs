@@ -46,7 +46,7 @@ namespace FwdHackathon.Controllers
 
       int counter = 0;
       model.trends = model.trends.Take(5).ToList();
-      List<double> listOfMatch = new List<double>();
+      //List<double> listOfMatch = new List<double>();
       List<string> listOfCategories = new List<string>();
 
       var usersClient = RestService.For<IClassifier>("https://api.uclassify.com/v1/uclassify");
@@ -55,12 +55,12 @@ namespace FwdHackathon.Controllers
       {
         Dictionary<string, double> users = await usersClient.GetMatches(t.name);
         users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-        listOfMatch.Add(users.ElementAt(0).Value * 100);
+        //listOfMatch.Add(users.ElementAt(0).Value * 100);
         listOfCategories.Add(users.ElementAt(0).Key);
 
       }
 
-      ViewBag.listOfMatch = listOfMatch;
+      //ViewBag.listOfMatch = listOfMatch;
       ViewBag.listOfCategories = listOfCategories;
 
       return View(model.trends);
@@ -87,13 +87,20 @@ namespace FwdHackathon.Controllers
       Dictionary<string, double> users = await usersClient.GetMatches(word);
       users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
 
-      int categoryList = _appDbContext.TransData
+      List<int> categoryList = await _appDbContext.TransData
         .Where(i => i.Label == users.ElementAt(0).Key)
         .Select(i => i.Value)
-        .First();
+        .ToListAsync();
+
+      int totalCategory = 0;
+
+      foreach (int cat in categoryList)
+      {
+        totalCategory += cat;
+      }
 
       int totalUsers = _appDbContext.TransData.Sum(x => x.Value);
-      decimal percentage = Math.Round((decimal) categoryList / totalUsers,6);
+      decimal percentage = Math.Round((decimal)totalCategory / totalUsers, 2) * 100;
 
 
       return percentage.ToString();
