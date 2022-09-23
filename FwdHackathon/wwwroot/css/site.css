@@ -72,6 +72,7 @@ input[type="file"] {
 
   .fo-text a {
     text-decoration: none;
+    color: var(--secondaryColor);
   }
 
 .trend-container {
