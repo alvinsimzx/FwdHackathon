@@ -45,7 +45,7 @@ namespace FwdHackathon.Controllers
       TrendsList model = JsonConvert.DeserializeObject<TrendsList>(unQuotedString);
 
       int counter = 0;
-      model.trends = model.trends.Take(5).ToList();
+      model.trends = model.trends.Take(8).ToList();
       //List<double> listOfMatch = new List<double>();
       List<string> listOfCategories = new List<string>();
 
@@ -121,7 +121,6 @@ namespace FwdHackathon.Controllers
 
       Dictionary<string, double> users = await usersClient.GetMatches(model.key);
       users = users.OrderByDescending(i => i.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
-
 
       _appDbContext.Add(new TransData(model.key, model.value, users.ElementAt(0).Key));
       await _appDbContext.SaveChangesAsync();

@@ -2,7 +2,7 @@ html {
   font-size: 14px;
   --primaryColor: #FFAC1C;
   --secondaryColor: #FFC869;
-  --tertiaryColor: #3B2806;
+  --tertiaryColor: #80560E;
 }
 
 @media (min-width: 768px) {
@@ -43,20 +43,23 @@ input[type="file"] {
   justify-content: center;
   margin-top: 5px;
   border-radius: 8px;
-  background-color: var(--primaryColor) !important;
+  background-color: var(--secondaryColor) !important;
 }
 
 .upload-text {
-  color: white;
+  color: var(--tertiaryColor);
 }
 
 .navigation {
   background-color: var(--primaryColor) !important;
 }
 
+.navigation a {
+  color: var(--tertiaryColor) !important;
+}
+
 .logo {
   font-weight: bold;
-  color: white;
 }
 
 .fo {
@@ -70,3 +73,35 @@ input[type="file"] {
   .fo-text a {
     text-decoration: none;
   }
+
+.trend-container {
+  display: flex;
+  color: var(--tertiaryColor);
+  text-decoration: none;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  background-color: var(--secondaryColor);
+  border-radius: 5px;
+}
+
+.trend-container:hover {
+  color: white;
+}
+
+.trend-name {
+  width: 70%;
+  font-weight: bold;
+}
+
+.trend-cat {
+  width: 30%;
+  font-style: italic;
+}
+
+.trend-title {
+  color: var(--primaryColor);
+}
+
+.trend-author {
+  color: var(--tertiaryColor);
+}
