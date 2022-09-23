@@ -8,15 +8,16 @@
 
 <div class="row">
   <div class="col-4">
-    <h3 class="display-4">Find out what's trending!</h3>
+    <h3>What's trending?</h3>
     @{
       int counter = 0;
     }
     @foreach (Trend t in Model)
     {
-      <a class="hashtag" href="#">@t.name</a>
-      <span>@ViewBag.listOfCategories[counter]</span>
-      <br />
+      <a class="trend-container" href="#">
+        <div class="hashtag trend-name">@t.name</div>
+        <div class="trend-cat">@ViewBag.listOfCategories[counter]</div>
+      </a>
       counter++;
     }
   </div>
@@ -24,9 +25,7 @@
     <div class="card">
       <h5 class="card-header">Featured</h5>
       <div class="card-body">
-        <h5 class="card-title">Click on the links to find out about each trend!</h5>
-        @*<p class="card-text" >With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>*@
+        <h5 class="card-title">Click on a card to find out more 😊</h5>
       </div>
     </div>
   </div>
@@ -45,16 +44,15 @@
             success: function (data) {
                 $('h5.card-title').remove();
                 $('p.card-text').remove();
-                $('.card-body').append("<h5 class='card-title''><strong>" + data + "% of your customers would relate to this hashtag</strong></h5>");
+                $('.card-body').append("<h5 class='card-title trend-title'><strong>" + data + "% of your customers relate to this topic</strong></h5>");
 
                 $.ajax({
                     url: "@Url.Action("getTweets", "Home")",
                     contentType: 'application/json; charset=utf-8',
                     data: { 'hashtag': txt },
                     success: function (data) {
-
                         for (var i = 0; i < data.length; i++) {
-                            $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <strong>' + data[i].Author + '</strong></p>');
+                            $('.card-body').append('<p class="card-text">' + data[i].fullText + ' - <span class="trend-author"><strong>' + data[i].author + '</span></strong></p>');
                             console.log(data[i].fullText)
                         };
                     },
