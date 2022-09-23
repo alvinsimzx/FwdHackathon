@@ -15,7 +15,7 @@
     @foreach (Trend t in Model)
     {
       <a class="trend-container" href="#">
-        <div class="hashtag trend-name">@t.name</div>
+        <div class="hashtag trend-name" onclick="handleClick(event)">@t.name</div>
         <div class="trend-cat">@ViewBag.listOfCategories[counter]</div>
       </a>
       counter++;
@@ -33,7 +33,7 @@
 
 @section Scripts{
   <script>
-    $(".hashtag").click(function async(event) {
+    const handleClick = async (event) => {
         var txt = $(event.target).text();
         /* stop form from submitting normally */
         event.preventDefault();
@@ -65,7 +65,6 @@
                 console.log(er);
             }
         });
-
-    });
+    }
   </script>
 }
